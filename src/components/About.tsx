@@ -1,62 +1,72 @@
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import { Terminal, Server, Globe, Cpu } from "lucide-react";
+
 const About = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const cards = [
+    {
+      icon: Terminal,
+      title: "System Development",
+      description: "Building robust systems using SDLC methodology, from requirements to deployment.",
+    },
+    {
+      icon: Server,
+      title: "Linux Environments",
+      description: "Deep experience with Debian/Ubuntu — server setup, scripting, and system administration.",
+    },
+    {
+      icon: Globe,
+      title: "Full-Stack Web Dev",
+      description: "Creating responsive, modern web applications with React, Node.js, and databases.",
+    },
+    {
+      icon: Cpu,
+      title: "AI Exploration",
+      description: "Leveraging AI tools to enhance productivity, learning, and software development.",
+    },
+  ];
+
   return (
-    <section id="about" className="py-32 bg-muted/20">
-      <div className="container mx-auto px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-20 items-center">
-            <div>
-              <h2 className="text-minimal text-muted-foreground mb-4">ABOUT</h2>
-              <h3 className="text-4xl md:text-6xl font-light text-architectural mb-12">
-                Design Philosophy
-              </h3>
-              
-              <div className="space-y-8">
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  We believe architecture should enhance human experience while respecting 
-                  the natural environment. Our practice focuses on creating spaces that 
-                  are both functional and poetic.
-                </p>
-                
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Founded in 2015, our studio has completed over 200 projects across 
-                  residential, commercial, and cultural sectors. Each project begins 
-                  with careful listening and ends with thoughtful execution.
-                </p>
-              </div>
-            </div>
-            
-            <div className="space-y-12">
-              <div>
-                <h4 className="text-minimal text-muted-foreground mb-6">APPROACH</h4>
-                <div className="space-y-6">
-                  <div className="border-l-2 border-architectural pl-6">
-                    <h5 className="text-lg font-medium mb-2">Research</h5>
-                    <p className="text-muted-foreground">Deep understanding of context, culture, and climate</p>
-                  </div>
-                  <div className="border-l-2 border-architectural pl-6">
-                    <h5 className="text-lg font-medium mb-2">Collaboration</h5>
-                    <p className="text-muted-foreground">Close partnership with clients, engineers, and craftspeople</p>
-                  </div>
-                  <div className="border-l-2 border-architectural pl-6">
-                    <h5 className="text-lg font-medium mb-2">Innovation</h5>
-                    <p className="text-muted-foreground">Sustainable materials and forward-thinking design solutions</p>
-                  </div>
+    <section id="about" className="py-24 md:py-32">
+      <div className="container mx-auto px-6" ref={ref}>
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <p className="section-label mb-3">About Me</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">
+              Turning Ideas Into <span className="gradient-text">Real Solutions</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl">
+              I'm an ICT specialist based in Kenya, passionate about the entire software development 
+              lifecycle. I thrive in Linux environments and love building systems that make a tangible 
+              difference — from student management platforms to business websites.
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {cards.map((card, index) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.1 * (index + 1) }}
+                className="glass-card-hover p-6"
+              >
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <card.icon size={24} className="text-primary" />
                 </div>
-              </div>
-              
-              <div className="pt-8 border-t border-border">
-                <div className="grid grid-cols-2 gap-8">
-                  <div>
-                    <h4 className="text-minimal text-muted-foreground mb-2">FOUNDED</h4>
-                    <p className="text-xl">2015</p>
-                  </div>
-                  <div>
-                    <h4 className="text-minimal text-muted-foreground mb-2">PROJECTS</h4>
-                    <p className="text-xl">200+</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+                <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{card.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
