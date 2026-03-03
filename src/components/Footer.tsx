@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Instagram } from "lucide-react";
 
 const Footer = () => (
   <footer className="py-12 border-t border-border">
@@ -9,9 +9,10 @@ const Footer = () => (
         </p>
         <div className="flex gap-4">
           {[
-            { icon: Github, href: "https://github.com/eugenekibet" },
-            { icon: Linkedin, href: "https://linkedin.com/in/eugenekibet" },
-            { icon: Mail, href: "mailto:eugenekibet@example.com" },
+            { icon: Github, href: "https://github.com/kybemurrey" },
+            { icon: Linkedin, href: "https://www.linkedin.com/in/eugene-murrey-4815a7390" },
+            { icon: Instagram, href: "https://www.instagram.com/kybe_murrey?igsh=NHNlcTJ0djR3ZWVm" },
+            { icon: Mail, href: "mailto:eugenekibetmurrey@gmail.com" },
           ].map(({ icon: Icon, href }) => (
             <a
               key={href}
