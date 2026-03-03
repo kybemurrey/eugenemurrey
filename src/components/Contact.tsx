@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Phone, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
@@ -28,9 +28,10 @@ const Contact = () => {
   };
 
   const socials = [
-    { icon: Github, href: "https://github.com/eugenekibet", label: "GitHub" },
-    { icon: Linkedin, href: "https://linkedin.com/in/eugenekibet", label: "LinkedIn" },
-    { icon: Mail, href: "mailto:eugenekibet@example.com", label: "Email" },
+    { icon: Github, href: "https://github.com/kybemurrey", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/eugene-murrey-4815a7390", label: "LinkedIn" },
+    { icon: Instagram, href: "https://www.instagram.com/kybe_murrey?igsh=NHNlcTJ0djR3ZWVm", label: "Instagram" },
+    { icon: Mail, href: "mailto:eugenekibetmurrey@gmail.com", label: "Email" },
     { icon: Phone, href: "https://wa.me/254700000000", label: "WhatsApp" },
   ];
 
@@ -126,7 +127,7 @@ const Contact = () => {
                   Looking for internships, freelance projects, and collaborations.
                 </p>
                 <Button asChild className="rounded-full gap-2">
-                  <a href="mailto:eugenekibet@example.com">
+                  <a href="mailto:eugenekibetmurrey@gmail.com">
                     <Mail size={16} /> Hire Me
                   </a>
                 </Button>

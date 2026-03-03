@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowDown, Github, Linkedin, Mail, Instagram } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Hero = () => {
   return (
@@ -12,6 +13,19 @@ const Hero = () => {
 
       <div className="relative z-10 container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8 flex justify-center"
+          >
+            <Avatar className="w-32 h-32 border-4 border-primary/30 shadow-xl shadow-primary/10">
+              <AvatarFallback className="text-4xl font-bold bg-gradient-to-br from-primary to-accent text-primary-foreground">
+                EK
+              </AvatarFallback>
+            </Avatar>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -76,9 +90,10 @@ const Hero = () => {
             className="flex justify-center gap-4"
           >
             {[
-              { icon: Github, href: "https://github.com/eugenekibet", label: "GitHub" },
-              { icon: Linkedin, href: "https://linkedin.com/in/eugenekibet", label: "LinkedIn" },
-              { icon: Mail, href: "mailto:eugenekibet@example.com", label: "Email" },
+              { icon: Github, href: "https://github.com/kybemurrey", label: "GitHub" },
+              { icon: Linkedin, href: "https://www.linkedin.com/in/eugene-murrey-4815a7390", label: "LinkedIn" },
+              { icon: Instagram, href: "https://www.instagram.com/kybe_murrey?igsh=NHNlcTJ0djR3ZWVm", label: "Instagram" },
+              { icon: Mail, href: "mailto:eugenekibetmurrey@gmail.com", label: "Email" },
             ].map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
