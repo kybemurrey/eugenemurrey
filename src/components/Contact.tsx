@@ -31,8 +31,8 @@ const Contact = () => {
     { icon: Github, href: "https://github.com/kybemurrey", label: "GitHub" },
     { icon: Linkedin, href: "https://www.linkedin.com/in/eugene-murrey-4815a7390", label: "LinkedIn" },
     { icon: Instagram, href: "https://www.instagram.com/kybe_murrey?igsh=NHNlcTJ0djR3ZWVm", label: "Instagram" },
-    { icon: Mail, href: "mailto:eugenekibetmurrey@gmail.com", label: "Email" },
-    { icon: Phone, href: "https://wa.me/254700000000", label: "WhatsApp" },
+    { icon: Mail, href: "mailto:murreyoxgene@gmail.com", label: "Email" },
+    { icon: Phone, href: "https://wa.me/254715011455", label: "WhatsApp" },
   ];
 
   return (
@@ -102,6 +102,30 @@ const Contact = () => {
                 </div>
               </div>
 
+              <div className="glass-card p-6 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Mail size={18} className="text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium">Email</p>
+                  <a href="mailto:murreyoxgene@gmail.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    murreyoxgene@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="glass-card p-6 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Phone size={18} className="text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium">Mobile</p>
+                  <a href="tel:+254715011455" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    0715 011 455
+                  </a>
+                </div>
+              </div>
+
               <div>
                 <p className="text-sm font-medium mb-4">Find me online</p>
                 <div className="flex gap-3">
@@ -127,7 +151,7 @@ const Contact = () => {
                   Looking for internships, freelance projects, and collaborations.
                 </p>
                 <Button asChild className="rounded-full gap-2">
-                  <a href="mailto:eugenekibetmurrey@gmail.com">
+                  <a href="mailto:murreyoxgene@gmail.com">
                     <Mail size={16} /> Hire Me
                   </a>
                 </Button>
