@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Linkedin, Mail, Instagram } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import profilePhoto from "@/assets/eugene-profile.png";
+import profilePhoto128 from "@/assets/eugene-profile-128.webp";
+import profilePhoto256 from "@/assets/eugene-profile-256.webp";
+import profilePhoto384 from "@/assets/eugene-profile-384.webp";
 
 const Hero = () => {
   return (
@@ -20,12 +21,18 @@ const Hero = () => {
             transition={{ duration: 0.6 }}
             className="mb-8 flex justify-center"
           >
-            <Avatar className="w-32 h-32 border-4 border-primary/30 shadow-xl shadow-primary/10">
-              <AvatarImage src={profilePhoto} alt="Eugene Kibet Murrey" className="object-cover object-top" />
-              <AvatarFallback className="text-4xl font-bold bg-gradient-to-br from-primary to-accent text-primary-foreground">
-                EK
-              </AvatarFallback>
-            </Avatar>
+            <img
+              src={profilePhoto256}
+              srcSet={`${profilePhoto128} 128w, ${profilePhoto256} 256w, ${profilePhoto384} 384w`}
+              sizes="128px"
+              width={128}
+              height={128}
+              alt="Eugene Kibet Murrey"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="w-32 h-32 rounded-full object-cover object-top border-4 border-primary/30 shadow-xl shadow-primary/10 bg-muted"
+            />
           </motion.div>
 
           <motion.div
