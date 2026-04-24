@@ -31,6 +31,66 @@ type FormState = { name: string; email: string; message: string };
 type FieldErrors = Partial<Record<keyof FormState, string>>;
 type TouchedState = Partial<Record<keyof FormState, boolean>>;
 
+interface FormFieldProps {
+  id: string;
+  label: string;
+  error?: string;
+  touched?: boolean;
+  value: string;
+  showCount?: boolean;
+  maxLength?: number;
+  children: React.ReactNode;
+}
+
+const FormField = ({ id, label, error, touched, value, showCount, maxLength, children }: FormFieldProps) => {
+  const showError = !!(error && touched);
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <label htmlFor={id} className="text-sm font-medium text-foreground">
+          {label}
+        </label>
+        {showCount && maxLength && (
+          <span className={`text-xs ${value.length > maxLength * 0.9 ? "text-destructive" : "text-muted-foreground"}`}>
+            {value.length}/{maxLength}
+          </span>
+        )}
+      </div>
+      {children}
+      <AnimatePresence mode="wait">
+        {showError && (
+          <motion.p
+            key={error}
+            id={`${id}-error`}
+            role="alert"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className="flex items-start gap-1.5 text-xs text-destructive"
+          >
+            <AlertCircle size={12} className="mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </motion.p>
+        )}
+        {!showError && touched && value.length > 0 && (
+          <motion.p
+            key="ok"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground"
+          >
+            <CheckCircle2 size={12} className="text-primary" />
+            <span>Looks good</span>
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
