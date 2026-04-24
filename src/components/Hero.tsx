@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Linkedin, Mail, Instagram } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import profilePhoto from "@/assets/eugene-profile.png";
 
 const Hero = () => {
   return (
@@ -20,6 +21,7 @@ const Hero = () => {
             className="mb-8 flex justify-center"
           >
             <Avatar className="w-32 h-32 border-4 border-primary/30 shadow-xl shadow-primary/10">
+              <AvatarImage src={profilePhoto} alt="Eugene Kibet Murrey" className="object-cover object-top" />
               <AvatarFallback className="text-4xl font-bold bg-gradient-to-br from-primary to-accent text-primary-foreground">
                 EK
               </AvatarFallback>
