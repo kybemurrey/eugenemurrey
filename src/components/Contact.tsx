@@ -5,6 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Github, Linkedin, Mail, MapPin, Phone, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name too long"),
+  email: z.string().trim().email("Invalid email").max(255, "Email too long"),
+  message: z.string().trim().min(1, "Message is required").max(2000, "Message too long"),
+});
 
 const Contact = () => {
   const ref = useRef(null);
@@ -13,18 +21,30 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      toast({ title: "Please fill in all fields", variant: "destructive" });
+    const parsed = contactSchema.safeParse(form);
+    if (!parsed.success) {
+      toast({
+        title: "Please check your inputs",
+        description: parsed.error.issues[0]?.message,
+        variant: "destructive",
+      });
       return;
     }
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      setForm({ name: "", email: "", message: "" });
-      toast({ title: "Message sent!", description: "Thanks for reaching out. I'll get back to you soon." });
-    }, 1500);
+    const { error } = await supabase.from("contact_submissions").insert(parsed.data);
+    setSending(false);
+    if (error) {
+      toast({
+        title: "Could not send message",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+    setForm({ name: "", email: "", message: "" });
+    toast({ title: "Message sent!", description: "Thanks for reaching out. I'll get back to you soon." });
   };
 
   const socials = [
@@ -79,7 +99,7 @@ const Contact = () => {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 className="rounded-lg min-h-[140px]"
-                maxLength={1000}
+                maxLength={2000}
               />
               <Button type="submit" className="w-full rounded-full" disabled={sending}>
                 {sending ? "Sending..." : "Send Message"}
