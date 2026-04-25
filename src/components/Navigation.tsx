@@ -42,7 +42,7 @@ const Navigation = () => {
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
           <Button asChild size="sm" className="rounded-full px-6">
-            <a href="mailto:eugenekibetmurrey@gmail.com">Hire Me</a>
+            <a href="mailto:murreyoxgene@gmail.com">Hire Me</a>
           </Button>
         </div>
 
@@ -76,7 +76,7 @@ const Navigation = () => {
             <div className="pt-4 border-t border-border flex items-center gap-3">
               <ThemeToggle />
               <Button asChild size="sm" className="rounded-full px-6">
-                <a href="mailto:eugenekibetmurrey@gmail.com">Hire Me</a>
+                <a href="mailto:murreyoxgene@gmail.com">Hire Me</a>
               </Button>
             </div>
           </div>
