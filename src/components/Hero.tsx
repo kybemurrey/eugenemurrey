@@ -102,7 +102,7 @@ const Hero = () => {
               { icon: Github, href: "https://github.com/kybemurrey", label: "GitHub" },
               { icon: Linkedin, href: "https://www.linkedin.com/in/eugene-murrey-4815a7390", label: "LinkedIn" },
               { icon: Instagram, href: "https://www.instagram.com/kybe_murrey?igsh=NHNlcTJ0djR3ZWVm", label: "Instagram" },
-              { icon: Mail, href: "mailto:eugenekibetmurrey@gmail.com", label: "Email" },
+              { icon: Mail, href: "mailto:murreyoxgene@gmail.com", label: "Email" },
             ].map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
