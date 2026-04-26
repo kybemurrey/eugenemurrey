@@ -1,104 +1,10 @@
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Github, Linkedin, Mail, MapPin, Phone, Instagram, AlertCircle, CheckCircle2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { z } from "zod";
+import { Github, Linkedin, Mail, MapPin, Phone, Instagram, MessageCircle } from "lucide-react";
 
-const contactSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Please enter your full name (at least 2 characters).")
-    .max(100, "Name must be 100 characters or fewer."),
-  email: z
-    .string()
-    .trim()
-    .min(1, "Email is required.")
-    .email("Please enter a valid email address (e.g. you@example.com).")
-    .max(255, "Email must be 255 characters or fewer."),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Message is too short — please write at least 10 characters.")
-    .max(2000, "Message must be 2000 characters or fewer."),
-});
-
-type FormState = { name: string; email: string; message: string };
-type FieldErrors = Partial<Record<keyof FormState, string>>;
-type TouchedState = Partial<Record<keyof FormState, boolean>>;
-
-const CONTACT_RECIPIENT_EMAIL = "murreyoxgene@gmail.com";
-
-const buildMailtoHref = ({ name, email, message }: FormState) => {
-  const subject = encodeURIComponent(`Portfolio contact from ${name}`);
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-
-  return `mailto:${CONTACT_RECIPIENT_EMAIL}?subject=${subject}&body=${body}`;
-};
-
-interface FormFieldProps {
-  id: string;
-  label: string;
-  error?: string;
-  touched?: boolean;
-  value: string;
-  showCount?: boolean;
-  maxLength?: number;
-  children: React.ReactNode;
-}
-
-const FormField = ({ id, label, error, touched, value, showCount, maxLength, children }: FormFieldProps) => {
-  const showError = !!(error && touched);
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-sm font-medium text-foreground">
-          {label}
-        </label>
-        {showCount && maxLength && (
-          <span className={`text-xs ${value.length > maxLength * 0.9 ? "text-destructive" : "text-muted-foreground"}`}>
-            {value.length}/{maxLength}
-          </span>
-        )}
-      </div>
-      {children}
-      <AnimatePresence mode="wait">
-        {showError && (
-          <motion.p
-            key={error}
-            id={`${id}-error`}
-            role="alert"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
-            className="flex items-start gap-1.5 text-xs text-destructive"
-          >
-            <AlertCircle size={12} className="mt-0.5 shrink-0" />
-            <span>{error}</span>
-          </motion.p>
-        )}
-        {!showError && touched && value.length > 0 && (
-          <motion.p
-            key="ok"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground"
-          >
-            <CheckCircle2 size={12} className="text-primary" />
-            <span>Looks good</span>
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
+const WHATSAPP_NUMBER = "254715011455";
+const WHATSAPP_MESSAGE = "Hi Eugene, I found your portfolio and would like to discuss a project opportunity.";
 
 const Contact = () => {
   const ref = useRef(null);
