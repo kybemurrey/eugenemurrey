@@ -45,9 +45,9 @@ const About = () => {
               Turning Ideas Into <span className="gradient-text">Real Solutions</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl">
-              I'm an ICT specialist based in Kenya, passionate about the entire software development 
-              lifecycle. I thrive in Linux environments and love building systems that make a tangible 
-              difference — from student management platforms to business websites.
+              I'm Eugene Kibet, a motivated IT specialist and prompt engineer based in Mombasa, Kenya.
+              Currently studying at the Technical University of Mombasa, I combine academic learning
+              with hands-on experience in full-stack development, AI/ML, and networking.
             </p>
           </motion.div>
 
