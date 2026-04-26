@@ -9,71 +9,7 @@ const WHATSAPP_MESSAGE = "Hi Eugene, I found your portfolio and would like to di
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { toast } = useToast();
-  const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [touched, setTouched] = useState<TouchedState>({});
-  const [sending, setSending] = useState(false);
-
-  const validateField = (field: keyof FormState, value: string): string | undefined => {
-    const fieldSchema = contactSchema.shape[field];
-    const result = fieldSchema.safeParse(value);
-    return result.success ? undefined : result.error.issues[0]?.message;
-  };
-
-  const handleChange = (field: keyof FormState, value: string) => {
-    setForm((f) => ({ ...f, [field]: value }));
-    if (touched[field]) {
-      setErrors((prev) => ({ ...prev, [field]: validateField(field, value) }));
-    }
-  };
-
-  const handleBlur = (field: keyof FormState) => {
-    setTouched((t) => ({ ...t, [field]: true }));
-    setErrors((prev) => ({ ...prev, [field]: validateField(field, form[field]) }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = contactSchema.safeParse(form);
-    if (!parsed.success) {
-      const fieldErrors: FieldErrors = {};
-      for (const issue of parsed.error.issues) {
-        const key = issue.path[0] as keyof FormState | undefined;
-        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
-      }
-      setErrors(fieldErrors);
-      setTouched({ name: true, email: true, message: true });
-      toast({
-        title: "Please fix the highlighted fields",
-        description: "A few details still need your attention before sending.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setSending(true);
-    const { error } = await supabase.from("contact_submissions").insert(parsed.data);
-    setSending(false);
-    if (error) {
-      const friendly =
-        error.code === "23514"
-          ? "One of your fields didn't meet our limits. Please shorten it and try again."
-          : error.message?.toLowerCase().includes("network") || error.message?.toLowerCase().includes("fetch")
-          ? "Network error — please check your connection and try again."
-          : "Something went wrong on our end. Please try again in a moment.";
-      toast({
-        title: "Could not send message",
-        description: friendly,
-        variant: "destructive",
-      });
-      return;
-    }
-    window.location.href = buildMailtoHref(parsed.data);
-    setForm({ name: "", email: "", message: "" });
-    setErrors({});
-    setTouched({});
-    toast({ title: "Email app opened", description: "Review and send the prepared message to murreyoxgene@gmail.com." });
-  };
+  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
   const socials = [
     { icon: Github, href: "https://github.com/kybemurrey", label: "GitHub" },
@@ -100,83 +36,27 @@ const Contact = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-12">
-            <motion.form
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 }}
-              onSubmit={handleSubmit}
-              noValidate
-              className="glass-card p-8 space-y-6"
+              className="glass-card p-8 flex flex-col justify-center space-y-6"
             >
-              <FormField
-                id="contact-name"
-                label="Name"
-                error={errors.name}
-                touched={touched.name}
-                value={form.name}
-              >
-                <Input
-                  id="contact-name"
-                  placeholder="Your Name"
-                  value={form.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  onBlur={() => handleBlur("name")}
-                  className={`rounded-lg ${errors.name && touched.name ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  maxLength={100}
-                  aria-invalid={!!(errors.name && touched.name)}
-                  aria-describedby="contact-name-error"
-                  autoComplete="name"
-                />
-              </FormField>
-
-              <FormField
-                id="contact-email"
-                label="Email"
-                error={errors.email}
-                touched={touched.email}
-                value={form.email}
-              >
-                <Input
-                  id="contact-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={form.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  onBlur={() => handleBlur("email")}
-                  className={`rounded-lg ${errors.email && touched.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  maxLength={255}
-                  aria-invalid={!!(errors.email && touched.email)}
-                  aria-describedby="contact-email-error"
-                  autoComplete="email"
-                />
-              </FormField>
-
-              <FormField
-                id="contact-message"
-                label="Message"
-                error={errors.message}
-                touched={touched.message}
-                value={form.message}
-                showCount
-                maxLength={2000}
-              >
-                <Textarea
-                  id="contact-message"
-                  placeholder="Tell me a bit about your project or idea…"
-                  value={form.message}
-                  onChange={(e) => handleChange("message", e.target.value)}
-                  onBlur={() => handleBlur("message")}
-                  className={`rounded-lg min-h-[140px] ${errors.message && touched.message ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  maxLength={2000}
-                  aria-invalid={!!(errors.message && touched.message)}
-                  aria-describedby="contact-message-error"
-                />
-              </FormField>
-
-              <Button type="submit" className="w-full rounded-full" disabled={sending}>
-                {sending ? "Preparing..." : "Open Email App"}
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                <MessageCircle size={24} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-3">Message me on WhatsApp</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Start a direct conversation about internships, freelance work, collaborations, or ICT support.
+                </p>
+              </div>
+              <Button asChild className="w-full rounded-full gap-2">
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle size={18} /> Send WhatsApp Message
+                </a>
               </Button>
-            </motion.form>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}
