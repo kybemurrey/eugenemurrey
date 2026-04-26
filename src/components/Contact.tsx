@@ -1,44 +1,15 @@
 import { motion, useInView } from "framer-motion";
-import { FormEvent, useRef, useState } from "react";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { Github, Linkedin, Loader2, Mail, MapPin, Phone, Instagram, Send } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Phone, Instagram, MessageCircle } from "lucide-react";
+
+const WHATSAPP_NUMBER = "254715011455";
+const WHATSAPP_MESSAGE = "Hi Eugene, I found your portfolio and would like to discuss a project opportunity.";
 
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      toast({ title: "Missing details", description: "Please fill in all fields.", variant: "destructive" });
-      return;
-    }
-
-    setIsSubmitting(true);
-    const { error } = await supabase.from("contact_submissions").insert({
-      name: formData.name.trim(),
-      email: formData.email.trim(),
-      message: formData.message.trim(),
-    });
-
-    setIsSubmitting(false);
-
-    if (error) {
-      toast({ title: "Message not sent", description: error.message, variant: "destructive" });
-      return;
-    }
-
-    setFormData({ name: "", email: "", message: "" });
-    toast({ title: "Message sent", description: "Thanks — Eugene will receive it in the website inbox." });
-  };
+  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
   const socials = [
     { icon: Github, href: "https://github.com/kybemurrey", label: "GitHub" },
@@ -68,43 +39,22 @@ const Contact = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="glass-card p-8"
+              className="glass-card p-8 flex flex-col justify-center space-y-6"
             >
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
-                <Send size={24} className="text-primary" />
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                <MessageCircle size={24} className="text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Send a direct message</h3>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                Reach out about internships, freelance work, collaborations, or ICT support.
-              </p>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <Input
-                  value={formData.name}
-                  onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
-                  placeholder="Your name"
-                  autoComplete="name"
-                  disabled={isSubmitting}
-                />
-                <Input
-                  type="email"
-                  value={formData.email}
-                  onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))}
-                  placeholder="Your email"
-                  autoComplete="email"
-                  disabled={isSubmitting}
-                />
-                <Textarea
-                  value={formData.message}
-                  onChange={(event) => setFormData((current) => ({ ...current, message: event.target.value }))}
-                  placeholder="Write your message"
-                  className="min-h-36 resize-none"
-                  disabled={isSubmitting}
-                />
-                <Button type="submit" className="w-full rounded-full gap-2" disabled={isSubmitting}>
-                  {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                </Button>
-              </form>
+              <div>
+                <h3 className="text-2xl font-bold mb-3">Message me on WhatsApp</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Start a direct conversation about internships, freelance work, collaborations, or ICT support.
+                </p>
+              </div>
+              <Button asChild className="w-full rounded-full gap-2">
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle size={18} /> Send WhatsApp Message
+                </a>
+              </Button>
             </motion.div>
 
             <motion.div
@@ -119,7 +69,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="font-medium">Location</p>
-                  <p className="text-sm text-muted-foreground">Nairobi, Kenya</p>
+                  <p className="text-sm text-muted-foreground">Mombasa, Kenya</p>
                 </div>
               </div>
 
