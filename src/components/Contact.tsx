@@ -31,6 +31,15 @@ type FormState = { name: string; email: string; message: string };
 type FieldErrors = Partial<Record<keyof FormState, string>>;
 type TouchedState = Partial<Record<keyof FormState, boolean>>;
 
+const CONTACT_RECIPIENT_EMAIL = "murreyoxgene@gmail.com";
+
+const buildMailtoHref = ({ name, email, message }: FormState) => {
+  const subject = encodeURIComponent(`Portfolio contact from ${name}`);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+
+  return `mailto:${CONTACT_RECIPIENT_EMAIL}?subject=${subject}&body=${body}`;
+};
+
 interface FormFieldProps {
   id: string;
   label: string;
@@ -153,10 +162,11 @@ const Contact = () => {
       });
       return;
     }
+    window.location.href = buildMailtoHref(parsed.data);
     setForm({ name: "", email: "", message: "" });
     setErrors({});
     setTouched({});
-    toast({ title: "Message sent!", description: "Thanks for reaching out. I'll get back to you soon." });
+    toast({ title: "Email app opened", description: "Review and send the prepared message to murreyoxgene@gmail.com." });
   };
 
   const socials = [
@@ -258,7 +268,7 @@ const Contact = () => {
               </FormField>
 
               <Button type="submit" className="w-full rounded-full" disabled={sending}>
-                {sending ? "Sending..." : "Send Message"}
+                {sending ? "Preparing..." : "Open Email App"}
               </Button>
             </motion.form>
 
