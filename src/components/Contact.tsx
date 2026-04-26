@@ -1,173 +1,15 @@
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Github, Linkedin, Mail, MapPin, Phone, Instagram, AlertCircle, CheckCircle2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { z } from "zod";
+import { Github, Linkedin, Mail, MapPin, Phone, Instagram, MessageCircle } from "lucide-react";
 
-const contactSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Please enter your full name (at least 2 characters).")
-    .max(100, "Name must be 100 characters or fewer."),
-  email: z
-    .string()
-    .trim()
-    .min(1, "Email is required.")
-    .email("Please enter a valid email address (e.g. you@example.com).")
-    .max(255, "Email must be 255 characters or fewer."),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Message is too short — please write at least 10 characters.")
-    .max(2000, "Message must be 2000 characters or fewer."),
-});
-
-type FormState = { name: string; email: string; message: string };
-type FieldErrors = Partial<Record<keyof FormState, string>>;
-type TouchedState = Partial<Record<keyof FormState, boolean>>;
-
-const CONTACT_RECIPIENT_EMAIL = "murreyoxgene@gmail.com";
-
-const buildMailtoHref = ({ name, email, message }: FormState) => {
-  const subject = encodeURIComponent(`Portfolio contact from ${name}`);
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-
-  return `mailto:${CONTACT_RECIPIENT_EMAIL}?subject=${subject}&body=${body}`;
-};
-
-interface FormFieldProps {
-  id: string;
-  label: string;
-  error?: string;
-  touched?: boolean;
-  value: string;
-  showCount?: boolean;
-  maxLength?: number;
-  children: React.ReactNode;
-}
-
-const FormField = ({ id, label, error, touched, value, showCount, maxLength, children }: FormFieldProps) => {
-  const showError = !!(error && touched);
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-sm font-medium text-foreground">
-          {label}
-        </label>
-        {showCount && maxLength && (
-          <span className={`text-xs ${value.length > maxLength * 0.9 ? "text-destructive" : "text-muted-foreground"}`}>
-            {value.length}/{maxLength}
-          </span>
-        )}
-      </div>
-      {children}
-      <AnimatePresence mode="wait">
-        {showError && (
-          <motion.p
-            key={error}
-            id={`${id}-error`}
-            role="alert"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
-            className="flex items-start gap-1.5 text-xs text-destructive"
-          >
-            <AlertCircle size={12} className="mt-0.5 shrink-0" />
-            <span>{error}</span>
-          </motion.p>
-        )}
-        {!showError && touched && value.length > 0 && (
-          <motion.p
-            key="ok"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground"
-          >
-            <CheckCircle2 size={12} className="text-primary" />
-            <span>Looks good</span>
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
+const WHATSAPP_NUMBER = "254715011455";
+const WHATSAPP_MESSAGE = "Hi Eugene, I found your portfolio and would like to discuss a project opportunity.";
 
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { toast } = useToast();
-  const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [touched, setTouched] = useState<TouchedState>({});
-  const [sending, setSending] = useState(false);
-
-  const validateField = (field: keyof FormState, value: string): string | undefined => {
-    const fieldSchema = contactSchema.shape[field];
-    const result = fieldSchema.safeParse(value);
-    return result.success ? undefined : result.error.issues[0]?.message;
-  };
-
-  const handleChange = (field: keyof FormState, value: string) => {
-    setForm((f) => ({ ...f, [field]: value }));
-    if (touched[field]) {
-      setErrors((prev) => ({ ...prev, [field]: validateField(field, value) }));
-    }
-  };
-
-  const handleBlur = (field: keyof FormState) => {
-    setTouched((t) => ({ ...t, [field]: true }));
-    setErrors((prev) => ({ ...prev, [field]: validateField(field, form[field]) }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = contactSchema.safeParse(form);
-    if (!parsed.success) {
-      const fieldErrors: FieldErrors = {};
-      for (const issue of parsed.error.issues) {
-        const key = issue.path[0] as keyof FormState | undefined;
-        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
-      }
-      setErrors(fieldErrors);
-      setTouched({ name: true, email: true, message: true });
-      toast({
-        title: "Please fix the highlighted fields",
-        description: "A few details still need your attention before sending.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setSending(true);
-    const { error } = await supabase.from("contact_submissions").insert(parsed.data);
-    setSending(false);
-    if (error) {
-      const friendly =
-        error.code === "23514"
-          ? "One of your fields didn't meet our limits. Please shorten it and try again."
-          : error.message?.toLowerCase().includes("network") || error.message?.toLowerCase().includes("fetch")
-          ? "Network error — please check your connection and try again."
-          : "Something went wrong on our end. Please try again in a moment.";
-      toast({
-        title: "Could not send message",
-        description: friendly,
-        variant: "destructive",
-      });
-      return;
-    }
-    window.location.href = buildMailtoHref(parsed.data);
-    setForm({ name: "", email: "", message: "" });
-    setErrors({});
-    setTouched({});
-    toast({ title: "Email app opened", description: "Review and send the prepared message to murreyoxgene@gmail.com." });
-  };
+  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
   const socials = [
     { icon: Github, href: "https://github.com/kybemurrey", label: "GitHub" },
@@ -194,83 +36,27 @@ const Contact = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-12">
-            <motion.form
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 }}
-              onSubmit={handleSubmit}
-              noValidate
-              className="glass-card p-8 space-y-6"
+              className="glass-card p-8 flex flex-col justify-center space-y-6"
             >
-              <FormField
-                id="contact-name"
-                label="Name"
-                error={errors.name}
-                touched={touched.name}
-                value={form.name}
-              >
-                <Input
-                  id="contact-name"
-                  placeholder="Your Name"
-                  value={form.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  onBlur={() => handleBlur("name")}
-                  className={`rounded-lg ${errors.name && touched.name ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  maxLength={100}
-                  aria-invalid={!!(errors.name && touched.name)}
-                  aria-describedby="contact-name-error"
-                  autoComplete="name"
-                />
-              </FormField>
-
-              <FormField
-                id="contact-email"
-                label="Email"
-                error={errors.email}
-                touched={touched.email}
-                value={form.email}
-              >
-                <Input
-                  id="contact-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={form.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  onBlur={() => handleBlur("email")}
-                  className={`rounded-lg ${errors.email && touched.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  maxLength={255}
-                  aria-invalid={!!(errors.email && touched.email)}
-                  aria-describedby="contact-email-error"
-                  autoComplete="email"
-                />
-              </FormField>
-
-              <FormField
-                id="contact-message"
-                label="Message"
-                error={errors.message}
-                touched={touched.message}
-                value={form.message}
-                showCount
-                maxLength={2000}
-              >
-                <Textarea
-                  id="contact-message"
-                  placeholder="Tell me a bit about your project or idea…"
-                  value={form.message}
-                  onChange={(e) => handleChange("message", e.target.value)}
-                  onBlur={() => handleBlur("message")}
-                  className={`rounded-lg min-h-[140px] ${errors.message && touched.message ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  maxLength={2000}
-                  aria-invalid={!!(errors.message && touched.message)}
-                  aria-describedby="contact-message-error"
-                />
-              </FormField>
-
-              <Button type="submit" className="w-full rounded-full" disabled={sending}>
-                {sending ? "Preparing..." : "Open Email App"}
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                <MessageCircle size={24} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-3">Message me on WhatsApp</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Start a direct conversation about internships, freelance work, collaborations, or ICT support.
+                </p>
+              </div>
+              <Button asChild className="w-full rounded-full gap-2">
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle size={18} /> Send WhatsApp Message
+                </a>
               </Button>
-            </motion.form>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}
