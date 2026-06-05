@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import Seo from "@/components/Seo";
 import { blogPosts } from "@/data/blogPosts";
 
 const Blog = () => {
@@ -12,8 +13,14 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Blog — Tech Insights by Eugene Kibet"
+        description="Tutorials, Linux tips, AI tools, and lessons from building real-world projects, by Eugene Kibet Murrey."
+        path="/blog"
+      />
       <Navigation />
 
+      <main>
       <section className="pt-32 pb-16">
         <div className="container mx-auto px-6 max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -65,6 +72,7 @@ const Blog = () => {
           </div>
         </div>
       </section>
+      </main>
 
       <Footer />
     </div>
