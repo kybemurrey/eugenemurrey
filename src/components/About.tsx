@@ -63,7 +63,7 @@ const About = () => {
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <card.icon size={24} className="text-primary" />
                 </div>
-                <h2 className="text-lg font-semibold mb-2">{card.title}</h2>
+                <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{card.description}</p>
               </motion.div>
             ))}

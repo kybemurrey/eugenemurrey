@@ -1,0 +1,19 @@
+# Eugene Kibet Murrey
+
+> Portfolio of Eugene Kibet Murrey — ICT specialist, full-stack developer, and prompt engineer based in Mombasa, Kenya.
+
+Eugene studies at the Technical University of Mombasa and works on system development in C, full-stack web platforms, Linux engineering, and applied AI/ML.
+
+## Pages
+
+- [Home](/): Overview, skills, featured projects, and contact.
+- [About](/about): Background, skills, and certifications.
+- [Projects](/projects): Portfolio of system development, web, and Linux projects.
+- [Blog](/blog): Tutorials on C, Linux, AI tools, and full-stack development.
+- [Contact](/contact): Email, phone, location, and social links.
+
+## Blog
+
+- [Getting Started with C Programming](/blog/getting-started-with-c-programming): Beginner C programming guide for system development.
+- [Upgrading from Debian 11 to 12](/blog/upgrading-debian-11-to-12): Step-by-step Debian Bookworm upgrade walkthrough.
+- [Top AI Tools for Students in 2024](/blog/ai-tools-for-students): AI tools for coding, productivity, and research.
