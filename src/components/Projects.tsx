@@ -121,6 +121,7 @@ const Projects = () => {
           >
             <button
               onClick={() => setSelected(null)}
+              aria-label="Close project details"
               className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
             >
               <X size={20} />
