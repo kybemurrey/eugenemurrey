@@ -75,7 +75,7 @@ const Hero = () => {
             className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10"
           >
             Passionate about system development, full-stack web solutions, and leveraging technology
-            to create impactful software from Nairobi, Kenya.
+            to create impactful software from Mombasa, Kenya.
           </motion.p>
 
           <motion.div
