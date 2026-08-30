@@ -58,6 +58,7 @@ const Admin = () => {
         return;
       }
       await fetchSubmissions();
+      await fetchSiteErrors();
     };
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
