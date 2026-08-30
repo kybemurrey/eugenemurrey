@@ -179,10 +179,10 @@ const Admin = () => {
               <div>
                 <p className="section-label mb-2">Admin</p>
                 <h1 className="text-3xl md:text-4xl font-bold">
-                  Contact <span className="gradient-text">Submissions</span>
+                  Admin <span className="gradient-text">Dashboard</span>
                 </h1>
                 <p className="text-sm text-muted-foreground mt-2">
-                  {submissions.length} total · {unread} unread
+                  {submissions.length} messages · {unread} unread · {siteErrors.length} errors
                 </p>
               </div>
               <Button onClick={signOut} variant="outline" size="sm" className="rounded-full">
@@ -190,6 +190,13 @@ const Admin = () => {
               </Button>
             </div>
 
+            <Tabs defaultValue="messages">
+              <TabsList className="mb-6">
+                <TabsTrigger value="messages">Messages</TabsTrigger>
+                <TabsTrigger value="errors">Errors</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="messages">
             {submissions.length === 0 ? (
               <div className="glass-card p-12 text-center">
                 <Inbox className="mx-auto text-muted-foreground mb-4" size={40} />
