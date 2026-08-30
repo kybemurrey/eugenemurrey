@@ -110,6 +110,28 @@ const Admin = () => {
     toast({ title: "Deleted" });
   };
 
+  const fetchSiteErrors = async () => {
+    const { data, error } = await supabase
+      .from("site_errors")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) {
+      toast({ title: "Failed to load errors", description: error.message, variant: "destructive" });
+      return;
+    }
+    setSiteErrors(data ?? []);
+  };
+
+  const removeError = async (id: string) => {
+    const { error } = await supabase.from("site_errors").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setSiteErrors((prev) => prev.filter((x) => x.id !== id));
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     navigate("/auth", { replace: true });
