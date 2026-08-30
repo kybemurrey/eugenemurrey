@@ -35,6 +35,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [siteErrors, setSiteErrors] = useState<SiteError[]>([]);
 
   useEffect(() => {
     let active = true;
