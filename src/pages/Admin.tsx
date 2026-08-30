@@ -5,8 +5,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Mail, Trash2, CheckCircle2, LogOut, Inbox } from "lucide-react";
+import { Loader2, Mail, Trash2, CheckCircle2, LogOut, Inbox, Bug } from "lucide-react";
 
 interface Submission {
   id: string;
@@ -14,6 +15,17 @@ interface Submission {
   email: string;
   message: string;
   read: boolean;
+  created_at: string;
+}
+
+interface SiteError {
+  id: string;
+  kind: string;
+  message: string;
+  stack: string | null;
+  url: string | null;
+  route: string | null;
+  user_agent: string | null;
   created_at: string;
 }
 
