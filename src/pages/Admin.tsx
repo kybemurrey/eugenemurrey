@@ -5,8 +5,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Mail, Trash2, CheckCircle2, LogOut, Inbox } from "lucide-react";
+import { Loader2, Mail, Trash2, CheckCircle2, LogOut, Inbox, Bug } from "lucide-react";
 
 interface Submission {
   id: string;
@@ -17,12 +18,24 @@ interface Submission {
   created_at: string;
 }
 
+interface SiteError {
+  id: string;
+  kind: string;
+  message: string;
+  stack: string | null;
+  url: string | null;
+  route: string | null;
+  user_agent: string | null;
+  created_at: string;
+}
+
 const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [siteErrors, setSiteErrors] = useState<SiteError[]>([]);
 
   useEffect(() => {
     let active = true;
@@ -45,6 +58,7 @@ const Admin = () => {
         return;
       }
       await fetchSubmissions();
+      await fetchSiteErrors();
     };
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -96,6 +110,28 @@ const Admin = () => {
     toast({ title: "Deleted" });
   };
 
+  const fetchSiteErrors = async () => {
+    const { data, error } = await supabase
+      .from("site_errors")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) {
+      toast({ title: "Failed to load errors", description: error.message, variant: "destructive" });
+      return;
+    }
+    setSiteErrors(data ?? []);
+  };
+
+  const removeError = async (id: string) => {
+    const { error } = await supabase.from("site_errors").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setSiteErrors((prev) => prev.filter((x) => x.id !== id));
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     navigate("/auth", { replace: true });
@@ -143,10 +179,10 @@ const Admin = () => {
               <div>
                 <p className="section-label mb-2">Admin</p>
                 <h1 className="text-3xl md:text-4xl font-bold">
-                  Contact <span className="gradient-text">Submissions</span>
+                  Admin <span className="gradient-text">Dashboard</span>
                 </h1>
                 <p className="text-sm text-muted-foreground mt-2">
-                  {submissions.length} total · {unread} unread
+                  {submissions.length} messages · {unread} unread · {siteErrors.length} errors
                 </p>
               </div>
               <Button onClick={signOut} variant="outline" size="sm" className="rounded-full">
@@ -154,6 +190,13 @@ const Admin = () => {
               </Button>
             </div>
 
+            <Tabs defaultValue="messages">
+              <TabsList className="mb-6">
+                <TabsTrigger value="messages">Messages</TabsTrigger>
+                <TabsTrigger value="errors">Errors</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="messages">
             {submissions.length === 0 ? (
               <div className="glass-card p-12 text-center">
                 <Inbox className="mx-auto text-muted-foreground mb-4" size={40} />
