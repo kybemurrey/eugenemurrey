@@ -256,6 +256,58 @@ const Admin = () => {
                 ))}
               </div>
             )}
+              </TabsContent>
+
+              <TabsContent value="errors">
+                {siteErrors.length === 0 ? (
+                  <div className="glass-card p-12 text-center">
+                    <Bug className="mx-auto text-muted-foreground mb-4" size={40} />
+                    <p className="text-muted-foreground">No errors reported. All clear.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {siteErrors.map((e) => (
+                      <div key={e.id} className="glass-card p-6">
+                        <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Badge variant={e.kind === "navigation" ? "secondary" : "destructive"}>
+                                {e.kind}
+                              </Badge>
+                              {e.route && (
+                                <code className="text-xs text-muted-foreground">{e.route}</code>
+                              )}
+                            </div>
+                            <p className="text-sm font-medium mt-2 break-words">{e.message}</p>
+                          </div>
+                          <span className="text-xs text-muted-foreground shrink-0">
+                            {new Date(e.created_at).toLocaleString()}
+                          </span>
+                        </div>
+                        {e.stack && (
+                          <details className="mb-3">
+                            <summary className="text-xs text-muted-foreground cursor-pointer hover:text-primary">
+                              Stack trace
+                            </summary>
+                            <pre className="text-xs mt-2 overflow-x-auto whitespace-pre-wrap text-muted-foreground">
+                              {e.stack}
+                            </pre>
+                          </details>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-full text-destructive hover:text-destructive"
+                          onClick={() => removeError(e.id)}
+                        >
+                          <Trash2 size={14} className="mr-1" /> Dismiss
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </main>
